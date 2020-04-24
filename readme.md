@@ -7,7 +7,7 @@
 ## Steps to execute this calculator:
 - Download the entire code 
 - Open up the index.html.
-- [View Live Site](https://anthonys1760.github.io/Simple-Calculator/)
+- [View Live Site](https://anthonys1760.github.io/Loan-Calculator/)
 
 ## Technologies used: 
 - HTML
