@@ -1,5 +1,15 @@
 // Listen for submit
-document.getElementById('loan-form').addEventListener('submit', calculateResults);
+document.getElementById('loan-form').addEventListener('submit', function(e) {
+    //Hide results
+    document.getElementById('results').style.display = 'none';
+    
+    //Show Loader
+    document.getElementById('loading').style.display = 'block';
+    
+    setTimeout(calculateResults, 2000);
+
+    e.preventDefault();
+});
 
 //Calculate Results
 function calculateResults(e) {
@@ -14,7 +24,7 @@ function calculateResults(e) {
 
     const principal = parseFloat(amount.value);
     const calculatedInterest = parseFloat(interest.value) / 100 / 12;
-    const calculatedPayments = parseFloat(years.value);
+    const calculatedPayments = parseFloat(years.value) * 12;
 
     //Compute monthly payment
     const x = Math.pow(1 + calculatedInterest, calculatedPayments);
@@ -23,11 +33,55 @@ function calculateResults(e) {
     if(isFinite(monthly)) {
         monthlyPayment.value = monthly.toFixed(2);
         totalPayment.value = (monthly * calculatedPayments).toFixed(2);
-        totalInterest.value = ((monthly * calculatedPayments) - principal);
+        totalInterest.value = ((monthly * calculatedPayments)-principal).toFixed(2);
+
+        //Show results
+        $('.input-group-text').show();
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('total-payment').style.display = 'block';
+        document.getElementById('total-interest').style.display = 'block';
+
+        //Hide Loaded
+        document.getElementById('loading').style.display = 'none';
     } else {
-        console.log('Please check your numbers');
+       showError('Please check your numbers');
     }
+}
 
+//Show Error
+function showError(error) {
 
-    e.preventDefault();
+    //Hide results
+    $('.input-group-text').show();
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('total-payment').style.display = 'none';
+    document.getElementById('total-interest').style.display = 'none';
+    document.getElementById('payment').style.display = 'none';
+    document.getElementById('interest-2').style.display = 'none';
+    
+    //Hide Loaded
+    document.getElementById('loading').style.display = 'none';
+
+    //Create a div
+    const errorDiv = document.createElement('div');
+
+    //Get elements
+    const card = document.querySelector('.card');
+    const heading = document.querySelector('.heading');
+
+    //Add class
+    errorDiv.className = 'alert alert-danger';
+    //Create text node and append to div
+    errorDiv.appendChild(document.createTextNode(error));
+
+    //Insert error above heading
+    card.insertBefore(errorDiv, heading);
+
+    //Clear error after 3 seconds
+    setTimeout(clearError, 3000);
+
+    //Clear error
+    function clearError() {
+        document.querySelector('.alert').remove();
+    }
 }
